@@ -4,21 +4,13 @@ import java.io.*;
 import java.util.Scanner;
 
 public class MenuCreator {
-    static Creator currentCreator;
-    private static Console writer;
 
-    public static void createCreator(String name) {
-        currentCreator = new Creator(name);
-    }
-
-    public static void creatGame() {
+    public static void createGame() {
         // show menu
         System.out.println("Create a game!");
         System.out.print("enter your name: ");
         Scanner sc = new Scanner(System.in);
         String creatorName = sc.nextLine();
-
-        createCreator(creatorName);
 
         System.out.print("please enter the CLAVE word: ");
         String palabraClave = sc.nextLine();
