@@ -1,7 +1,5 @@
 package Game;
 
-import java.util.Scanner;
-
 public class Creator  {
     private String name;
 

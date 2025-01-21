@@ -13,17 +13,17 @@ public class MenuCreator {
 
     public static void creatGame() {
         // show menu
-        System.out.println("Create a game: ");
-        System.out.println("enter your name: ");
+        System.out.println("Create a game!");
+        System.out.print("enter your name: ");
         Scanner sc = new Scanner(System.in);
         String creatorName = sc.nextLine();
 
         createCreator(creatorName);
 
-        System.out.println("please enter the CLAVE word: ");
+        System.out.print("please enter the CLAVE word: ");
         String palabraClave = sc.nextLine();
 
-        System.out.println("please enter the adivinar words: ");
+        System.out.print("please enter the adivinar words: ");
         String palabrasAdivinar = sc.nextLine();
 
         //aqui, teneis que llamar a funcion para escribir fichero

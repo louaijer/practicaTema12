@@ -1,0 +1,2 @@
+palabra clave: qwerty
+palabra adivinar: pizza sandvich burger
