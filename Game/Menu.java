@@ -7,18 +7,18 @@ public class Menu {
     // esto es para hacer pruebas,
     // voy directamente al MenuCreator
     public static void main(String[] args){
-        Scanner input = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Bienvenido! Para salir usa 'q'.");
         while (true) {
             System.out.println("--------------------");
             System.out.println("Creador o Jugador? (c/j)");
             System.out.print(">");
-            String answer = input.nextLine();
+            String answer = scanner.nextLine();
             boolean isCreator = answer.equalsIgnoreCase("c");
             boolean isPlayer = answer.equalsIgnoreCase("j");
             if (isCreator || isPlayer) {
                 if (isCreator) {
-                    MenuCreator.createGame();
+                    MenuCreator.createGame(scanner);
                 } else if (isPlayer) {
 
                 }
@@ -26,6 +26,6 @@ public class Menu {
                 break;
             }
         }
-        input.close();
+        scanner.close();
     }
 }

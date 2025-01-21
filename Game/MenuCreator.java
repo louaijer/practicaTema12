@@ -5,24 +5,21 @@ import java.util.Scanner;
 
 public class MenuCreator {
 
-    public static void createGame() {
+    public static void createGame(Scanner scanner) {
         // show menu
         System.out.println("Create a game!");
         System.out.print("enter your name: ");
-        Scanner sc = new Scanner(System.in);
-        String creatorName = sc.nextLine();
+        String creatorName = scanner.nextLine();
 
         System.out.print("please enter the CLAVE word: ");
-        String palabraClave = sc.nextLine();
+        String palabraClave = scanner.nextLine();
 
         System.out.print("please enter the adivinar words: ");
-        String palabrasAdivinar = sc.nextLine();
+        String palabrasAdivinar = scanner.nextLine();
 
         //aqui, teneis que llamar a funcion para escribir fichero
         writeToFile(creatorName, palabraClave, palabrasAdivinar);
         System.out.println("game data saved");
-        sc.close();
-
     }
 
     public static void writeToFile(String creatorName, String palabraClave, String palabrasAdivinar) {
