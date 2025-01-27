@@ -19,8 +19,7 @@ public class MenuPlayer {
     /**
      * Creates a new player instance by asking for the player's name.
      */
-    public static void createPlayer() {
-        Scanner scanner = new Scanner(System.in);
+    public static void createPlayer(Scanner scanner) {
         System.out.print("Enter player name: ");
         String playerName = scanner.nextLine();
         player = new Player(playerName);
