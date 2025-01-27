@@ -1,3 +1,4 @@
+package Game;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,25 +12,25 @@ import java.util.Scanner;
  */
 public class MenuPlayer {
 
-    private Player player;
-    private List<String> guessedWords = new ArrayList<>();
-    private List<String> missedWords = new ArrayList<>();
+    private static Player player;
+    private static List<String> guessedWords = new ArrayList<>();
+    private static List<String> missedWords = new ArrayList<>();
 
     /**
      * Creates a new player instance by asking for the player's name.
      */
-    public void createPlayer() {
+    public static void createPlayer() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter player name: ");
         String playerName = scanner.nextLine();
-        this.player = new Player(playerName);
+        player = new Player(playerName);
         System.out.println("Player created: " + player);
     }
 
     /**
      * Prints the list of available games by scanning the game directory.
      */
-    public void printGamesList() {
+    public static void printGamesList() {
         File gameDirectory = new File("./juegoAdivinar/");
         if (!gameDirectory.exists() || !gameDirectory.isDirectory()) {
             System.out.println("No games available.");
@@ -51,7 +52,7 @@ public class MenuPlayer {
      * Allows the player to choose a game by the creator's name.
      * @param creatorName the name of the creator of the game.
      */
-    public void chooseGame(String creatorName) {
+    public static void chooseGame(String creatorName) {
         File gameFile = new File("./juegoAdivinar/" + creatorName + "/juego_de_" + creatorName + ".txt");
         if (!gameFile.exists()) {
             System.out.println("Game by creator " + creatorName + " does not exist.");
@@ -65,7 +66,7 @@ public class MenuPlayer {
     /**
      * Finishes the current game by saving the player's progress to a file.
      */
-    public void finishCurrentGame() {
+    public static void finishCurrentGame() {
         if (player == null) {
             System.out.println("No player created. Please create a player first.");
             return;
@@ -95,7 +96,7 @@ public class MenuPlayer {
      * Updates the list of guessed words.
      * @param word the word guessed correctly by the player.
      */
-    public void addGuessedWord(String word) {
+    public static void addGuessedWord(String word) {
         guessedWords.add(word);
     }
 
