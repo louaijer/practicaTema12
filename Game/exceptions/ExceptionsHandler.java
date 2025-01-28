@@ -1,14 +1,17 @@
 package Game.exceptions;
 
-import javax.swing.text.DateFormatter;
 import java.io.*;
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ExceptionsHandler {
 
-    public static void writeLog(String error) {
+    /**
+     * Writes all error in error.log file.
+     * @param c Writes the source of error.
+     * @param error Gets message from this.
+     */
+    public static void writeLog(Class c, String error) {
         File errorLog = new File("./error.log");
         if (!errorLog.exists()) {
             try {
@@ -20,7 +23,11 @@ public class ExceptionsHandler {
         try {
             FileReader fr = new FileReader(errorLog);
             BufferedReader br = new BufferedReader(fr);
-            String text = br.lines().toString();
+            String line = br.readLine();
+            StringBuilder text = new StringBuilder(line);
+            while ((line = br.readLine()) != null) {
+                text.append("\n").append(line);
+            }
             br.close();
             fr.close();
 
@@ -31,7 +38,7 @@ public class ExceptionsHandler {
             String formattedTime = currentTime.format(formatter);
 
             FileWriter fw = new FileWriter(errorLog);
-            fw.write(formattedTime + " " + error + "\n" + text);
+            fw.write(formattedTime + " [" + c.getName() + "] " + error + "\n" + text);
             fw.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

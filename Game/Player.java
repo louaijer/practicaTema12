@@ -1,5 +1,10 @@
 package Game;
 
+import Game.exceptions.ExistingCreatorNameException;
+import Game.exceptions.PlayerCreatorNameConflictException;
+
+import java.io.File;
+
 /**
  * Represents a player in the game.
  */
@@ -11,9 +16,14 @@ public class Player {
      * Constructor for creating a player with a name.
      * @param name The name of the player.
      */
-    public Player(String name) {
-        this.name = name;
-        this.score = 0; // Initialize score to 0
+    public Player(String name) throws PlayerCreatorNameConflictException {
+        File file = new File("./juegoAdivinar/" + name + "/juego_de_" + name + ".txt");
+        if(file.exists()) {
+            throw new PlayerCreatorNameConflictException();
+        } else  {
+            this.name = name;
+            this.score = 0; // Initialize score to 0
+        }
     }
 
     /**

@@ -1,5 +1,8 @@
 package Game;
 
+import Game.exceptions.ExceptionsHandler;
+import Game.exceptions.PlayerCreatorNameConflictException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,11 +23,20 @@ public class MenuPlayer extends Menu {
      * Creates a new player instance by asking for the player's name.
      */
     public static int createPlayer() {
-        String playerName = getInput("Enter player name: ");
-        if (playerName == null) {
-            return 0;
+        while (true) {
+            String playerName = getInput(MenuPlayer.class, "Enter player name: ");
+            if (playerName == null) {
+                return 0;
+            }
+            try {
+                player = new Player(playerName);
+            } catch (PlayerCreatorNameConflictException e) {
+                System.out.println(e.getMessage());
+                ExceptionsHandler.writeLog(MenuPlayer.class, e.getMessage());
+                continue;
+            }
+            break;
         }
-        player = new Player(playerName);
         System.out.println("Player created: " + player);
         return 1;
     }
@@ -54,7 +66,7 @@ public class MenuPlayer extends Menu {
      * Allows the player to choose a game by the creator's name.
      */
     public static int chooseGame() {
-        String creatorName = getInput("Choose game name: ");
+        String creatorName = getInput(MenuPlayer.class, "Choose game name: ");
         if (creatorName == null) {
             return 0;
         }
@@ -78,7 +90,7 @@ public class MenuPlayer extends Menu {
             return;
         }
 
-        String creatorName = getInput("Enter game creator name to save progress: ");
+        String creatorName = getInput(MenuPlayer.class, "Enter game creator name to save progress: ");
         File progressFile = new File("./juegoAdivinar/" + creatorName + "/partidas/" + player.getName() + ".txt");
 
         try {

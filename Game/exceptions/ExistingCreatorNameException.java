@@ -8,7 +8,7 @@ public class ExistingCreatorNameException extends Exception {
 
     @Override
     public String getMessage() {
-        ExceptionsHandler.writeLog(super.getMessage());
+        ExceptionsHandler.writeLog(ExistingCreatorNameException.class, super.getMessage());
         return super.getMessage();
     }
 }

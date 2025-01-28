@@ -13,7 +13,7 @@ public class MenuCreator extends Menu {
 
         Creator creator;
         while (true) {
-            String creatorName = getInput("enter your name: ");
+            String creatorName = getInput(MenuCreator.class, "enter your name: ");
             if (creatorName == null) {
                 return 0;
             }
@@ -26,11 +26,11 @@ public class MenuCreator extends Menu {
             break;
         }
 
-        String palabraClave = getInput("please enter the CLAVE word: ");
+        String palabraClave = getInput(MenuCreator.class, "please enter the CLAVE word: ");
         if (palabraClave == null) {
             return 0;
         }
-        String palabrasAdivinar = getInput("please enter the adivinar words: ");
+        String palabrasAdivinar = getInput(MenuCreator.class, "please enter the adivinar words: ");
         if (palabrasAdivinar == null) {
             return 0;
         }

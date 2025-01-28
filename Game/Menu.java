@@ -1,5 +1,7 @@
 package Game;
 
+import Game.exceptions.ExceptionsHandler;
+
 import java.util.Scanner;
 
 public class Menu {
@@ -13,7 +15,7 @@ public class Menu {
         System.out.println("Welcome! For quit, type 'q'.");
         while (true) {
             System.out.println("--------------------");
-            String answer = getInput("Creator or Player? (c/p)\n>");
+            String answer = getInput(Menu.class, "Creator or Player? (c/p)\n>");
             if (answer == null) {
                 break;
             }
@@ -39,7 +41,7 @@ public class Menu {
         scanner.close();
     }
 
-    protected static String getInput(String message) {
+    protected static String getInput(Class c, String message) {
         while (true) {
             System.out.print(message);
             String input = scanner.nextLine().trim();
@@ -52,6 +54,7 @@ public class Menu {
                 return input;
             }
             System.out.println("Input cannot be empty. Please try again.");
+            ExceptionsHandler.writeLog(c, "Empty input.");
         }
     }
 }
