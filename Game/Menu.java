@@ -4,28 +4,35 @@ import java.util.Scanner;
 
 public class Menu {
 
+    private static Scanner scanner;
+
     // esto es para hacer pruebas,
     // voy directamente al MenuCreator
     public static void main(String[] args){
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         System.out.println("Welcome! For quit, type 'q'.");
         while (true) {
             System.out.println("--------------------");
-            System.out.println("Creator or Player? (c/p)");
-            System.out.print(">");
-            String answer = scanner.nextLine();
+            String answer = getInput("Creator or Player? (c/p)\n>");
+            if (answer == null) {
+                break;
+            }
             boolean isCreator = answer.equalsIgnoreCase("c");
             boolean isPlayer = answer.equalsIgnoreCase("p");
             if (isCreator || isPlayer) {
                 if (isCreator) {
-                    MenuCreator.createGame(scanner);
+                    int resultCode = MenuCreator.createGame();
+                    if(resultCode == 0) {
+                        break;
+                    }
                 } else if (isPlayer) {
-                    MenuPlayer.createPlayer(scanner);
+                    MenuPlayer.createPlayer();
                     MenuPlayer.printGamesList();
 
-                    System.out.println("Choose game name:");
-                    System.out.print(">");
-                    String creatorName = scanner.nextLine();
+                    String creatorName = getInput("Choose game name: ");
+                    if (creatorName == null) {
+                        break;
+                    }
                     MenuPlayer.chooseGame(creatorName);
                 }
             } else if (answer.equalsIgnoreCase("q")) {
@@ -33,5 +40,21 @@ public class Menu {
             }
         }
         scanner.close();
+    }
+
+    protected static String getInput(String message) {
+        while (true) {
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("q")) {
+                System.out.println("Bye-bye!");
+                return null;
+            }
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.println("Input cannot be empty. Please try again.");
+        }
     }
 }

@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Represents the menu functionality for a player.
  */
-public class MenuPlayer {
+public class MenuPlayer extends Menu {
 
     private static Player player;
     private static List<String> guessedWords = new ArrayList<>();
@@ -19,9 +19,8 @@ public class MenuPlayer {
     /**
      * Creates a new player instance by asking for the player's name.
      */
-    public static void createPlayer(Scanner scanner) {
-        System.out.print("Enter player name: ");
-        String playerName = scanner.nextLine();
+    public static void createPlayer() {
+        String playerName = getInput("Enter player name: ");
         player = new Player(playerName);
         System.out.println("Player created: " + player);
     }
@@ -37,7 +36,7 @@ public class MenuPlayer {
         }
 
         File[] gameFiles = gameDirectory.listFiles();
-        System.out.println("Available games:");
+        System.out.println("Available games: ");
         if (gameFiles != null) {
             for (File file : gameFiles) {
                 if (file.isDirectory()) {
@@ -65,14 +64,13 @@ public class MenuPlayer {
     /**
      * Finishes the current game by saving the player's progress to a file.
      */
-    public static void finishCurrentGame(Scanner scanner) {
+    public static void finishCurrentGame() {
         if (player == null) {
             System.out.println("No player created. Please create a player first.");
             return;
         }
 
-        System.out.print("Enter game creator name to save progress: ");
-        String creatorName = scanner.nextLine();
+        String creatorName = getInput("Enter game creator name to save progress: ");
         File progressFile = new File("./juegoAdivinar/" + creatorName + "/partidas/" + player.getName() + ".txt");
 
         try {
