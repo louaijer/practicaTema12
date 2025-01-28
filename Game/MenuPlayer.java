@@ -1,8 +1,3 @@
-package Game;
-
-import Game.exceptions.ExceptionsHandler;
-import Game.exceptions.PlayerCreatorNameConflictException;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,48 +6,37 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Represents the menu functionality for a player.
+ * Clase que representa la funcionalidad del menú para el jugador.
  */
-public class MenuPlayer extends Menu {
+public class MenuPlayer {
 
-    private static Player player;
-    private static List<String> guessedWords = new ArrayList<>();
-    private static List<String> missedWords = new ArrayList<>();
+    private Player player;
+    private List<String> guessedWords = new ArrayList<>();
+    private List<String> missedWords = new ArrayList<>();
 
     /**
-     * Creates a new player instance by asking for the player's name.
+     * Crea un nuevo jugador solicitando su nombre.
      */
-    public static int createPlayer() {
-        while (true) {
-            String playerName = getInput(MenuPlayer.class, "Enter player name: ");
-            if (playerName == null) {
-                return 0;
-            }
-            try {
-                player = new Player(playerName);
-            } catch (PlayerCreatorNameConflictException e) {
-                System.out.println(e.getMessage());
-                ExceptionsHandler.writeLog(MenuPlayer.class, e.getMessage());
-                continue;
-            }
-            break;
-        }
-        System.out.println("Player created: " + player);
-        return 1;
+    public void createPlayer() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Introduce el nombre del jugador: ");
+        String playerName = scanner.nextLine();
+        this.player = new Player(playerName);
+        System.out.println("Jugador creado: " + player);
     }
 
     /**
-     * Prints the list of available games by scanning the game directory.
+     * Muestra la lista de juegos disponibles escaneando el directorio de juegos.
      */
-    public static void printGamesList() {
+    public void printGamesList() {
         File gameDirectory = new File("./juegoAdivinar/");
         if (!gameDirectory.exists() || !gameDirectory.isDirectory()) {
-            System.out.println("No games available.");
+            System.out.println("No hay juegos disponibles.");
             return;
         }
 
         File[] gameFiles = gameDirectory.listFiles();
-        System.out.println("Available games: ");
+        System.out.println("Juegos disponibles:");
         if (gameFiles != null) {
             for (File file : gameFiles) {
                 if (file.isDirectory()) {
@@ -63,62 +47,116 @@ public class MenuPlayer extends Menu {
     }
 
     /**
-     * Allows the player to choose a game by the creator's name.
+     * Permite al jugador elegir un juego por el nombre del creador y comienza el juego.
+     * @param creatorName el nombre del creador del juego.
      */
-    public static int chooseGame() {
-        String creatorName = getInput(MenuPlayer.class, "Choose game name: ");
-        if (creatorName == null) {
-            return 0;
-        }
+    public void chooseGame(String creatorName) {
         File gameFile = new File("./juegoAdivinar/" + creatorName + "/juego_de_" + creatorName + ".txt");
         if (!gameFile.exists()) {
-            System.out.println("Game by creator " + creatorName + " does not exist.");
-            return 1;
-        }
-
-        System.out.println("Game chosen: " + gameFile.getName());
-        // Further implementation to read game content can be added here.
-        return 1;
-    }
-
-    /**
-     * Finishes the current game by saving the player's progress to a file.
-     */
-    public static void finishCurrentGame() {
-        if (player == null) {
-            System.out.println("No player created. Please create a player first.");
+            System.out.println("El juego del creador " + creatorName + " no existe.");
             return;
         }
 
-        String creatorName = getInput(MenuPlayer.class, "Enter game creator name to save progress: ");
+        System.out.println("Juego elegido: " + gameFile.getName());
+
+        try (Scanner fileScanner = new Scanner(gameFile)) {
+            String surrenderWord = ""; // Palabra para rendirse
+            List<String> wordsToGuess = new ArrayList<>(); // Palabras que hay que adivinar
+
+            // Lectura del archivo del juego
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if (line.startsWith("Palabra finalizar:")) {
+                    surrenderWord = line.split(": ")[1].trim(); // Extraer la palabra para rendirse
+                } else if (line.startsWith("Palabras que hay que acertar:")) {
+                    String[] words = line.split(": ")[1].trim().split(" "); // Extraer las palabras para adivinar
+                    wordsToGuess.addAll(List.of(words));
+                }
+            }
+
+            if (surrenderWord.isEmpty() || wordsToGuess.isEmpty()) {
+                System.out.println("Formato de archivo de juego inválido.");
+                return;
+            }
+
+            // Comienzo del juego
+            Scanner inputScanner = new Scanner(System.in);
+            List<String> remainingWords = new ArrayList<>(wordsToGuess); // Palabras restantes para adivinar
+
+            System.out.println("¡El juego ha comenzado! Introduce palabras para adivinar. Para rendirte, escribe: " + surrenderWord);
+
+            while (!remainingWords.isEmpty()) {
+                System.out.print("Introduce palabras separadas por espacios: ");
+                String input = inputScanner.nextLine();
+
+                if (input.equalsIgnoreCase(surrenderWord)) {
+                    System.out.println("¡Te has rendido!");
+                    break;
+                }
+
+                String[] enteredWords = input.split(" ");
+                for (String word : enteredWords) {
+                    if (remainingWords.contains(word)) {
+                        guessedWords.add(word); // Añadir palabra acertada
+                        remainingWords.remove(word); // Eliminar de las palabras restantes
+                        System.out.println("¡Correcto! Has acertado: " + word);
+                    } else {
+                        missedWords.add(word); // Añadir palabra fallada
+                        System.out.println("¡Incorrecto! Has fallado: " + word);
+                    }
+                }
+
+                System.out.println("Palabras restantes para adivinar: " + remainingWords);
+            }
+
+            if (remainingWords.isEmpty()) {
+                System.out.println("¡Felicidades! ¡Has adivinado todas las palabras!");
+            }
+
+            // Guardar los resultados del juego
+            saveGameResults(creatorName, guessedWords, missedWords);
+
+        } catch (IOException e) {
+            System.out.println("Se produjo un error al leer el archivo del juego.");
+        }
+    }
+
+    /**
+     * Guarda los resultados del juego en un archivo.
+     * @param creatorName el nombre del creador del juego.
+     * @param guessedWords la lista de palabras acertadas.
+     * @param missedWords la lista de palabras falladas.
+     */
+    private void saveGameResults(String creatorName, List<String> guessedWords, List<String> missedWords) {
         File progressFile = new File("./juegoAdivinar/" + creatorName + "/partidas/" + player.getName() + ".txt");
 
         try {
             if (!progressFile.getParentFile().exists()) {
-                progressFile.getParentFile().mkdirs();
+                progressFile.getParentFile().mkdirs(); // Crear directorio si no existe
             }
             FileWriter writer = new FileWriter(progressFile, true);
-            writer.write("Score: " + player.getScore() + "\n");
-            writer.write("Guessed words: " + guessedWords + "\n");
-            writer.write("Missed words: " + missedWords + "\n");
+            writer.write("Palabras acertadas: " + guessedWords + "
+");
+            writer.write("Palabras falladas: " + missedWords + "
+");
             writer.close();
-            System.out.println("Progress saved for player " + player.getName() + ".");
+            System.out.println("Progreso guardado para el jugador " + player.getName() + ".");
         } catch (IOException e) {
-            System.out.println("An error occurred while saving progress.");
+            System.out.println("Se produjo un error al guardar el progreso.");
         }
     }
 
     /**
-     * Updates the list of guessed words.
-     * @param word the word guessed correctly by the player.
+     * Añade una palabra a la lista de palabras acertadas.
+     * @param word la palabra acertada.
      */
-    public static void addGuessedWord(String word) {
+    public void addGuessedWord(String word) {
         guessedWords.add(word);
     }
 
     /**
-     * Updates the list of missed words.
-     * @param word the word missed by the player.
+     * Añade una palabra a la lista de palabras falladas.
+     * @param word la palabra fallada.
      */
     public void addMissedWord(String word) {
         missedWords.add(word);
