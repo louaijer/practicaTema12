@@ -65,13 +65,12 @@ public class MenuPlayer {
     /**
      * Finishes the current game by saving the player's progress to a file.
      */
-    public static void finishCurrentGame() {
+    public static void finishCurrentGame(Scanner scanner) {
         if (player == null) {
             System.out.println("No player created. Please create a player first.");
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter game creator name to save progress: ");
         String creatorName = scanner.nextLine();
         File progressFile = new File("./juegoAdivinar/" + creatorName + "/partidas/" + player.getName() + ".txt");

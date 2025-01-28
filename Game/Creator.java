@@ -1,11 +1,20 @@
 package Game;
 
-public class Creator  {
+import Game.exceptions.ExistingCreatorNameException;
+
+import java.io.File;
+
+public class Creator {
     private String name;
 
-    public Creator(String name) {
-        this.name = name;
+    public Creator(String name) throws ExistingCreatorNameException {
+        File file = new File("juego_de_" + name + ".txt");
+        if(file.exists()) {
+            throw new ExistingCreatorNameException();
+        } else {
+            this.name = name;
+        }
     }
 
-    public String getName() {return name;}
+    public String getName() { return name; }
 }
