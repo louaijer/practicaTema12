@@ -19,10 +19,14 @@ public class MenuPlayer extends Menu {
     /**
      * Creates a new player instance by asking for the player's name.
      */
-    public static void createPlayer() {
+    public static int createPlayer() {
         String playerName = getInput("Enter player name: ");
+        if (playerName == null) {
+            return 0;
+        }
         player = new Player(playerName);
         System.out.println("Player created: " + player);
+        return 1;
     }
 
     /**
@@ -48,17 +52,21 @@ public class MenuPlayer extends Menu {
 
     /**
      * Allows the player to choose a game by the creator's name.
-     * @param creatorName the name of the creator of the game.
      */
-    public static void chooseGame(String creatorName) {
+    public static int chooseGame() {
+        String creatorName = getInput("Choose game name: ");
+        if (creatorName == null) {
+            return 0;
+        }
         File gameFile = new File("./juegoAdivinar/" + creatorName + "/juego_de_" + creatorName + ".txt");
         if (!gameFile.exists()) {
             System.out.println("Game by creator " + creatorName + " does not exist.");
-            return;
+            return 1;
         }
 
         System.out.println("Game chosen: " + gameFile.getName());
         // Further implementation to read game content can be added here.
+        return 1;
     }
 
     /**

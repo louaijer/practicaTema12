@@ -20,20 +20,17 @@ public class Menu {
             boolean isCreator = answer.equalsIgnoreCase("c");
             boolean isPlayer = answer.equalsIgnoreCase("p");
             if (isCreator || isPlayer) {
+                int resultCode;
                 if (isCreator) {
-                    int resultCode = MenuCreator.createGame();
-                    if(resultCode == 0) {
-                        break;
-                    }
+                    resultCode = MenuCreator.createGame();
+                    if(resultCode == 0) { break; }
                 } else if (isPlayer) {
-                    MenuPlayer.createPlayer();
+                    resultCode = MenuPlayer.createPlayer();
+                    if(resultCode == 0) { break; }
                     MenuPlayer.printGamesList();
 
-                    String creatorName = getInput("Choose game name: ");
-                    if (creatorName == null) {
-                        break;
-                    }
-                    MenuPlayer.chooseGame(creatorName);
+                    resultCode = MenuPlayer.chooseGame();
+                    if(resultCode == 0) { break; }
                 }
             } else if (answer.equalsIgnoreCase("q")) {
                 break;
