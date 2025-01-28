@@ -8,10 +8,10 @@ public class Creator {
     private String name;
 
     public Creator(String name) throws ExistingCreatorNameException {
-        File file = new File("juego_de_" + name + ".txt");
+        File file = new File("./juegoAdivinar/" + name + "/juego_de_" + name + ".txt");
         if(file.exists()) {
             throw new ExistingCreatorNameException();
-        } else {
+        } else  {
             this.name = name;
         }
     }
