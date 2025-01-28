@@ -12,7 +12,7 @@ public class Menu {
     // voy directamente al MenuCreator
     public static void main(String[] args){
         scanner = new Scanner(System.in);
-        System.out.println("Welcome! For quit, type 'q'.");
+        System.out.println("Welcome! For quit, type 'q' in any moment.");
         while (true) {
             System.out.println("--------------------");
             String answer = getInput(Menu.class, "Creator or Player? (c/p)\n>");
@@ -29,13 +29,12 @@ public class Menu {
                 } else if (isPlayer) {
                     resultCode = MenuPlayer.createPlayer();
                     if(resultCode == 0) { break; }
-                    MenuPlayer.printGamesList();
+                    resultCode = MenuPlayer.printGamesList();
+                    if(resultCode == 0) { continue; }
 
                     resultCode = MenuPlayer.chooseGame();
                     if(resultCode == 0) { break; }
                 }
-            } else if (answer.equalsIgnoreCase("q")) {
-                break;
             }
         }
         scanner.close();

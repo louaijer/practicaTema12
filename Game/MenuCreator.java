@@ -57,8 +57,8 @@ public class MenuCreator extends Menu {
         try {
             FileWriter fl = new FileWriter(ficheroEscritura, true);
             PrintWriter printWriter = new PrintWriter(fl);
-            printWriter.println("palabra clave: " + palabraClave);
-            printWriter.println("palabra adivinar: " + palabrasAdivinar);
+            printWriter.println("Palabra finalizar: " + palabraClave);
+            printWriter.println("Palabras que hay que acertar: " + palabrasAdivinar);
             printWriter.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block

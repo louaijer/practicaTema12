@@ -23,10 +23,13 @@ public class ExceptionsHandler {
         try {
             FileReader fr = new FileReader(errorLog);
             BufferedReader br = new BufferedReader(fr);
-            String line = br.readLine();
-            StringBuilder text = new StringBuilder(line);
+            StringBuilder text = new StringBuilder();
+            String line;
             while ((line = br.readLine()) != null) {
-                text.append("\n").append(line);
+                text.append(line).append("\n");
+            }
+            if(!text.isEmpty()) {
+                text.deleteCharAt(text.length() - 1);
             }
             br.close();
             fr.close();
